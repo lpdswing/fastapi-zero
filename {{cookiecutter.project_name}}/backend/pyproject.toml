@@ -1,0 +1,86 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Committed to the business development, without too much attention to basic components"
+authors = ["lpdswing <lpdswing@qq.com>"]
+license = "mit"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.101.1"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.20"}
+taskiq = "^0.8.6"
+sentry-sdk = {extras = ["fastapi"], version = "^1.29.2"}
+loguru = "^0.7.0"
+asgi-correlation-id = "^4.2.0"
+fastapi-users = {extras = ["sqlalchemy"], version = "^12.1.1"}
+alembic = "^1.11.2"
+fastapi-mail = "^1.4.1"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+psycopg2-binary = "^2.9.7"
+asyncpg = "^0.28.0"
+aiokafka = "^0.8.1"
+aio-pika = "^9.2.2"
+taskiq-aio-pika = "^0.4.0"
+taskiq-redis = "^0.4.0"
+taskiq-fastapi = "^0.3.0"
+
+
+[tool.poetry.group.dev.dependencies]
+bump-pydantic = "^0.6.1"
+mypy = "^1.5.1"
+black = "^23.7.0"
+isort = "^5.12.0"
+autoflake = "^2.2.0"
+flake8 = "^6.1.0"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+ruff = "^0.0.284"
+pre-commit = "^3.3.3"
+debugpy = "^1.6.7.post1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "mirrors"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+priority = "default"
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 120
+
+[tool.black]
+extend-exclude = '''
+/(
+  | alembic
+)/
+'''
+
+[tool.ruff]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+]
+line-length = 120
+target-version = "py311"
+exclude = [
+    "alembic",
+]
+ignore = [
+    "F401",
+    "F403",
+    "E501",  # line too long, handled by black
+]
+
+[tool.ruff.isort]
+known-third-party = ["fastapi", "pydantic", "starlette"]

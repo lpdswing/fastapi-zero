@@ -1,0 +1,65 @@
+version: "3.9"
+services:
+
+  proxy:
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
+      - traefik.http.services.${STACK_NAME?Variable not set}-traefik-public.loadbalancer.server.port=80
+
+
+  backend:
+    ports:
+      - "8888:8888"
+      - "5678:5678"
+    volumes:
+      - ./start-reload.sh:/start-reload.sh
+    environment:
+      - SERVER_HOST=http://${DOMAIN?Variable not set}
+      - PYDEVD_DISABLE_FILE_VALIDATION=1
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-true}
+    # command: bash -c "while true; do sleep 1; done"  # Infinite loop to keep container live doing nothing
+    command: /start-reload.sh
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.backend.rule=Host(`backend.localhost`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`))
+      - traefik.http.services.backend.loadbalancer.server.port=80
+      - traefik.http.routers.backend.entrypoints=websecure
+      - traefik.http.routers.backend.tls.certresolver=le
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        FRONTEND_ENV: dev
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.frontend.rule=Host(`frontend.localhost`) && PathPrefix(`/`)
+      - traefik.http.services.frontend.loadbalancer.server.port=80
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls.certresolver=le
+
+  kafka:
+    ports:
+      - '9092:9092'
+      - '9093:9093'
+
+  rmq:
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+networks:
+  traefik-public:
+    # For local dev, don't expect an external Traefik network
+    external: false
