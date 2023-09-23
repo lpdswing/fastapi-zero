@@ -79,6 +79,8 @@ services:
     depends_on:
       - db
       - redis
+      - kafka
+      - rmq
     env_file:
       - .env
     environment:

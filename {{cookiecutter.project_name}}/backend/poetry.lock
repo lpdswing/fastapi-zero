@@ -2,13 +2,13 @@
 
 [[package]]
 name = "aio-pika"
-version = "9.2.2"
+version = "9.3.0"
 description = "Wrapper around the aiormq for asyncio and humans"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "aio_pika-9.2.2-py3-none-any.whl", hash = "sha256:d8ff6568b67bbf97b146d1fefe72a27c3124c777cb7a56b3353b12f9130e1111"},
-    {file = "aio_pika-9.2.2.tar.gz", hash = "sha256:bf6dcc60085f1bc0b49c7bda3055ef0d17c97a1a87f4d355e8a02c5bf4f1c5bb"},
+    {file = "aio_pika-9.3.0-py3-none-any.whl", hash = "sha256:3aeb60410403bb61c0c0483f6487a471bfcf1f2cc7b738d6f3f466b18641a8f0"},
+    {file = "aio_pika-9.3.0.tar.gz", hash = "sha256:230c1087e089e62a590fae95b77ccda053331d3c745bca067d274d76ffceda27"},
 ]
 
 [package.dependencies]
@@ -801,16 +801,17 @@ reference = "mirrors"
 
 [[package]]
 name = "fastapi"
-version = "0.101.1"
+version = "0.103.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "fastapi-0.101.1-py3-none-any.whl", hash = "sha256:aef5f8676eb1b8389952e1fe734abe20f04b71f6936afcc53b320ba79b686a4b"},
-    {file = "fastapi-0.101.1.tar.gz", hash = "sha256:7b32000d14ca9992f7461117b81e4ef9ff0c07936af641b4fe40e67d5f9d63cb"},
+    {file = "fastapi-0.103.1-py3-none-any.whl", hash = "sha256:5e5f17e826dbd9e9b5a5145976c5cd90bcaa61f2bf9a69aca423f2bcebe44d83"},
+    {file = "fastapi-0.103.1.tar.gz", hash = "sha256:345844e6a82062f06a096684196aaf96c1198b25c06b72c1311b882aa2d8a35d"},
 ]
 
 [package.dependencies]
+anyio = ">=3.7.1,<4.0.0"
 email-validator = {version = ">=2.0.0", optional = true, markers = "extra == \"all\""}
 httpx = {version = ">=0.23.0", optional = true, markers = "extra == \"all\""}
 itsdangerous = {version = ">=1.1.0", optional = true, markers = "extra == \"all\""}
@@ -3409,4 +3410,4 @@ reference = "mirrors"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "bdeab35116218f758bfc23d684628948564d523f4f1693540c300c3e36c33fa5"
+content-hash = "0dfc58cad6f04b818f874a17cfcd0ee55156bc3261dc0ef1d088c6063f8654ff"

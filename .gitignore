@@ -80,3 +80,4 @@ dmypy.json
 .idea/
 .DS_Store
 {cookiecutter.project_name}
+fastapi_zero_demo/
