@@ -89,7 +89,6 @@ services:
       # Allow explicit env var override for tests
       - SMTP_HOST=${SMTP_HOST}
       - WORKER_CLASS=app.gunicorn_conf.DisableServerUvicornWorker
-      - ENVIRONMENT=prod
       - BACKEND_CORS_ORIGINS=["https://localhost"]
     volumes:
       - ./backend:/app
@@ -98,6 +97,7 @@ services:
       dockerfile: Dockerfile
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
+        INDEX_URL: ${INDEX_URL}
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
@@ -112,7 +112,7 @@ services:
     command:
       - taskiq
       - worker
-      - fastapi_zero.tkq:broker
+      - src.lib.taskiq.tkq:broker
 
   redis:
     image: redis:latest

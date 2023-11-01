@@ -1,7 +1,7 @@
 FROM python:3.11
 LABEL maintainer="lpdswing"
-
-RUN pip install uvicorn[standard] gunicorn -i https://pypi.tuna.tsinghua.edu.cn/simple
+ARG INDEX_URL=https://pypi.org/simple
+RUN pip install uvicorn[standard] gunicorn -i $INDEX_URL
 
 COPY ./start.sh /start.sh
 RUN chmod +x /start.sh
@@ -14,7 +14,7 @@ RUN chmod +x /start-reload.sh
 WORKDIR /app
 
 # Install Poetry
-RUN pip install poetry -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+RUN pip install poetry -i $INDEX_URL && \
     poetry config virtualenvs.create false
 # Copy poetry.lock* in case it doesn't exist in the repo
 COPY ./pyproject.toml ./poetry.lock* /app/

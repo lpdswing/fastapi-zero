@@ -2,10 +2,11 @@ version: "3.9"
 services:
   backend:
     ports:
-      - "8888:8888"
+      - "8888:80"
       - "5678:5678"
     volumes:
-      - ./start-reload.sh:/start-reload.sh
+      - ./backend/start-reload.sh:/start-reload.sh
+      - ./backend/:/app
     environment:
       - SERVER_HOST=http://${DOMAIN?Variable not set}
       - PYDEVD_DISABLE_FILE_VALIDATION=1
@@ -14,6 +15,7 @@ services:
       dockerfile: Dockerfile
       args:
         INSTALL_DEV: ${INSTALL_DEV-true}
+        INDEX_URL: ${INDEX_URL}
     # command: bash -c "while true; do sleep 1; done"  # Infinite loop to keep container live doing nothing
     command: /start-reload.sh
     labels:
