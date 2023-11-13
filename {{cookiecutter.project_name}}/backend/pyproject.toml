@@ -8,9 +8,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = {extras = ["all"], version = "^0.103.1"}
+fastapi = {extras = ["all"], version = "^0.104.1"}
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.20"}
-taskiq = "^0.8.6"
+taskiq = "^0.10.2"
 sentry-sdk = {extras = ["fastapi"], version = "^1.29.2"}
 loguru = "^0.7.0"
 asgi-correlation-id = "^4.2.0"
@@ -23,8 +23,9 @@ asyncpg = "^0.28.0"
 aiokafka = "^0.8.1"
 aio-pika = "^9.3.0"
 taskiq-aio-pika = "^0.4.0"
-taskiq-redis = "^0.4.0"
+taskiq-redis = "^0.5.2"
 taskiq-fastapi = "^0.3.0"
+tenacity = "^8.2.3"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -70,17 +71,22 @@ select = [
     "W",  # pycodestyle warnings
     "F",  # pyflakes
     "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP",  # pyupgrade
 ]
 line-length = 120
-target-version = "py311"
-exclude = [
-    "alembic",
-]
 ignore = [
     "F401",
     "F403",
+    "B008",  # do not perform function calls in argument defaults
     "E501",  # line too long, handled by black
+    "W191", # indentation contains tabs
 ]
 
 [tool.ruff.isort]
 known-third-party = ["fastapi", "pydantic", "starlette"]
+
+[tool.ruff.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true

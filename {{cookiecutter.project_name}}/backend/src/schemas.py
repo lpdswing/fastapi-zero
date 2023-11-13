@@ -1,9 +1,10 @@
+from collections.abc import Callable
 from datetime import datetime
-from typing import Any, Callable, Generic, TypeVar, Union
-from zoneinfo import ZoneInfo
+from typing import Any, Generic, TypeVar, Union
 
 import orjson
-from pydantic import model_validator, ConfigDict, BaseModel
+from pydantic import BaseModel, ConfigDict, model_validator
+from zoneinfo import ZoneInfo
 
 SchemaType = TypeVar("SchemaType", bound=BaseModel)
 
@@ -26,11 +27,7 @@ class ORJSONModel(BaseModel):
     @model_validator(mode="after")
     @classmethod
     def set_null_microseconds(cls, data: dict[str, Any]) -> dict[str, Any]:
-        datetime_fields = {
-            k: v.replace(microsecond=0)
-            for k, v in data.items()
-            if isinstance(k, datetime)
-        }
+        datetime_fields = {k: v.replace(microsecond=0) for k, v in data.items() if isinstance(k, datetime)}
 
         return {**data, **datetime_fields}
 

@@ -1,14 +1,14 @@
-from typing import List, Optional, TypeVar, Generic
+from typing import TypeVar
 
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.elements import ColumnElement
-from src.db.deps import get_db_session
-from src.db.base import Base
 
-T = TypeVar("T", bound=Base)
-DummyModel: T
+from src.db.base import Base
+from src.db.deps import get_db_session
+
+DummyModel = TypeVar("DummyModel", bound=Base)
 
 __all__ = ["DAO"]
 
@@ -25,7 +25,7 @@ class DAO:
         """
         self.session.add(DummyModel(**kwargs))  # noqa
 
-    async def get_all_dummies(self, limit: int, offset: int) -> List[DummyModel]:
+    async def get_all_dummies(self, limit: int, offset: int) -> list[DummyModel]:
         """
         Get all dummy models with limit/offset pagination.
 
@@ -39,10 +39,7 @@ class DAO:
 
         return list(raw_dummies.scalars().fetchall())
 
-    async def filter(
-            self,
-            **kwargs
-    ) -> List[DummyModel]:
+    async def filter(self, **kwargs) -> list[DummyModel]:
         """
         Get specific dummy model.
 

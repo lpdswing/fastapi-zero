@@ -1,8 +1,8 @@
+from fastapi_users.db import SQLAlchemyBaseUserTable
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.db.base import Base
-from fastapi_users.db import SQLAlchemyBaseUserTable
 
 __all__ = ["User"]
 

@@ -1,5 +1,5 @@
 from src.auth.constants import ErrorCode
-from src.exceptions import BadRequest, NotAuthenticated, PermissionDenied, NotFound
+from src.exceptions import BadRequest, NotAuthenticated, NotFound, PermissionDenied
 
 
 class AuthRequired(NotAuthenticated):

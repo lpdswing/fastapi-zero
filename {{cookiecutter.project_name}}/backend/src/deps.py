@@ -1,5 +1,6 @@
-from fastapi.requests import Request
 from fastapi import Depends
+from fastapi.requests import Request
+
 from src.auth.service import current_option_user
 from src.middlewares import global_userid
 

@@ -2,6 +2,8 @@ import json
 import multiprocessing
 import os
 
+from uvicorn.workers import UvicornWorker
+
 workers_per_core_str = os.getenv("WORKERS_PER_CORE", "1")
 max_workers_str = os.getenv("MAX_WORKERS")
 use_max_workers = None
@@ -47,7 +49,6 @@ graceful_timeout = int(graceful_timeout_str)
 timeout = int(timeout_str)
 keepalive = int(keepalive_str)
 
-
 # For debugging and testing
 log_data = {
     "loglevel": loglevel,
@@ -65,3 +66,8 @@ log_data = {
     "port": port,
 }
 print(json.dumps(log_data))
+
+
+class DisableServerUvicornWorker(UvicornWorker):
+    CONFIG_KWARGS = UvicornWorker.CONFIG_KWARGS
+    CONFIG_KWARGS.update({"server_header": False, "forwarded_allow_ips": "*"})

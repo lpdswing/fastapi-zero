@@ -1,3 +1,7 @@
 #! /usr/bin/env bash
 
-echo "running pre start script."
+# Let the DB start
+python /app/backend_pre_start.py
+
+# Run migrations
+alembic upgrade head

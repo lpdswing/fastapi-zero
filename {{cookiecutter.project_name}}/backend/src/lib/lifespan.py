@@ -1,14 +1,14 @@
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from src.config import settings
-from src.lib.logger import init_logger
 from src.lib.kafka.lifespan import init_kafka, shutdown_kafka
-from src.lib.redis.lifespan import init_redis, shutdown_redis
+from src.lib.logger import init_logger
 from src.lib.rabbitmq.lifespan import init_rabbit, shutdown_rabbit
+from src.lib.redis.lifespan import init_redis, shutdown_redis
 from src.lib.taskiq.lifespan import init_taskiq, shutdown_taskiq
 
 
@@ -22,10 +22,11 @@ def _startup_db(app: FastAPI) -> None:  # pragma: no cover
 
     :param app: fastAPI application.
     """
-    engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URI),
-                                 # echo=settings.ENVIRONMENT.is_debug,
-                                 echo=False
-                                 )
+    engine = create_async_engine(
+        str(settings.SQLALCHEMY_DATABASE_URI),
+        # echo=settings.ENVIRONMENT.is_debug,
+        echo=False,
+    )
     session_factory = async_sessionmaker(
         engine,
         expire_on_commit=False,
@@ -55,5 +56,3 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     await shutdown_kafka(app)
     await shutdown_redis(app)
     await shutdown_rabbit(app)
-
-

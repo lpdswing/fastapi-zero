@@ -1,22 +1,19 @@
 import sentry_sdk
-from fastapi import FastAPI, status, APIRouter, Depends
-from fastapi.responses import ORJSONResponse
-from starlette.middleware.cors import CORSMiddleware
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from asgi_correlation_id import correlation_id
+from fastapi import APIRouter, Depends, FastAPI, status
+from fastapi.responses import ORJSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.cors import CORSMiddleware
 
 from src.auth.router import router as auth_router
-from src.utils.router import router as util_router
 from src.config import app_configs, settings
+from src.deps import set_global_user
 from src.lib.lifespan import lifespan
 from src.lib.logger import log
 from src.middlewares import register_middlewares
-from src.deps import set_global_user
+from src.utils.router import router as util_router
 
-app = FastAPI(**app_configs,
-              lifespan=lifespan,
-              dependencies=[Depends(set_global_user)]
-              )
+app = FastAPI(**app_configs, lifespan=lifespan, dependencies=[Depends(set_global_user)])
 register_middlewares(app)
 
 
@@ -91,7 +88,7 @@ async def healthcheck() -> dict[str, str]:
 api_router = APIRouter()
 ########################## New routers here ############################  # noqa
 api_router.include_router(auth_router, prefix="/auth", tags=["Auth"])
-api_router.include_router(util_router, prefix='/util', tags=["Util"])
+api_router.include_router(util_router, prefix="/util", tags=["Util"])
 ########################################################################  # noqa
 
 app.include_router(api_router, prefix=settings.APIPrefix)

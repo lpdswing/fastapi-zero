@@ -1,4 +1,5 @@
 from datetime import timedelta
+
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 

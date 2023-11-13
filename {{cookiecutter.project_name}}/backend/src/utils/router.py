@@ -1,21 +1,23 @@
-from fastapi import APIRouter, Depends
-from aiokafka import AIOKafkaProducer
 from aio_pika import Channel, Message
 from aio_pika.pool import Pool
+from aiokafka import AIOKafkaProducer
+from fastapi import APIRouter, Depends
 from redis.asyncio import Redis
 
-from src.utils.schemas import KafkaMessage, RedisValueDTO, RMQMessageDTO, TiqBody
 from src.lib.kafka.deps import get_kafka_producer
-from src.lib.redis.deps import get_redis
 from src.lib.rabbitmq.deps import get_rmq_channel_pool
+from src.lib.redis.deps import get_redis
 from src.lib.taskiq.tasks import add_one
+from src.utils.schemas import KafkaMessage, RedisValueDTO, RMQMessageDTO, TiqBody
 
 router = APIRouter()
 
 
 @router.post("/kafka")
-async def send_kafka_message(kafka_message: KafkaMessage,
-                             producer: AIOKafkaProducer = Depends(get_kafka_producer)) -> None:
+async def send_kafka_message(
+    kafka_message: KafkaMessage,
+    producer: AIOKafkaProducer = Depends(get_kafka_producer),
+) -> None:
     await producer.send(
         topic=kafka_message.topic,
         value=kafka_message.message.encode(),
@@ -23,24 +25,15 @@ async def send_kafka_message(kafka_message: KafkaMessage,
 
 
 @router.put("/redis")
-async def set_redis_value(
-    redis_value: RedisValueDTO,
-    redis: Redis = Depends(get_redis)
-) -> None:
+async def set_redis_value(redis_value: RedisValueDTO, redis: Redis = Depends(get_redis)) -> None:
     if redis_value.value is not None:
         await redis.set(name=redis_value.key, value=redis_value.value)
 
 
 @router.get("/redis", response_model=RedisValueDTO)
-async def get_redis_value(
-    key: str,
-    redis: Redis = Depends(get_redis)
-) -> RedisValueDTO:
+async def get_redis_value(key: str, redis: Redis = Depends(get_redis)) -> RedisValueDTO:
     value = await redis.get(key)
-    return RedisValueDTO(
-        key=key,
-        value=value
-    )
+    return RedisValueDTO(key=key, value=value)
 
 
 @router.post("/rabbitmq")

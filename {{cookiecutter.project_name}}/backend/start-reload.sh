@@ -26,3 +26,6 @@ fi
 
 # Start Uvicorn with live reload
 exec uvicorn --reload --host $HOST --port $PORT --log-level $LOG_LEVEL "$APP_MODULE"
+# Use this for debugging in Docker
+echo "python -m debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn --reload --host $HOST --port $PORT --forwarded-allow-ips * --log-level $LOG_LEVEL $APP_MODULE"
+#exec python -m debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn --reload --host $HOST --port $PORT --forwarded-allow-ips "*" --log-level $LOG_LEVEL "$APP_MODULE"

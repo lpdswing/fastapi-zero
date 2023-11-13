@@ -11,6 +11,9 @@ COPY ./gunicorn_conf.py /gunicorn_conf.py
 COPY ./start-reload.sh /start-reload.sh
 RUN chmod +x /start-reload.sh
 
+COPY ./worker-start.sh /worker-start.sh
+RUN chmod +x /worker-start.sh
+
 WORKDIR /app
 
 # Install Poetry

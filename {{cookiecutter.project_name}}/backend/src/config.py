@@ -1,22 +1,22 @@
 import os
-from typing import Any, List, Union, Optional, Dict
 import secrets
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic_settings import SettingsConfigDict, BaseSettings
-
+from dotenv import load_dotenv
 from pydantic import (
-    field_validator, AnyHttpUrl,
+    AmqpDsn,
+    AnyHttpUrl,
     EmailStr,
+    FieldValidationInfo,
     HttpUrl,
     PostgresDsn,
-    validator,
     RedisDsn,
-    AmqpDsn,
-    FieldValidationInfo
+    field_validator,
+    validator,
 )
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.constants import Environment
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -31,7 +31,7 @@ class Config(BaseSettings):
     SERVER_HOST: AnyHttpUrl = "http://localhost"
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000"]'
-    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+    BACKEND_CORS_ORIGINS: list[str] = ["*"]
     CORS_ORIGINS_REGEX: str | None = None
 
     PROJECT_NAME: str
@@ -85,11 +85,7 @@ class Config(BaseSettings):
     @field_validator("EMAILS_ENABLED", mode="before")
     @classmethod
     def get_emails_enabled(cls, v: bool, info: FieldValidationInfo) -> bool:
-        return bool(
-            info.data.get("SMTP_HOST")
-            and info.data.get("SMTP_PORT")
-            and info.data.get("EMAILS_FROM_EMAIL")
-        )
+        return bool(info.data.get("SMTP_HOST") and info.data.get("SMTP_PORT") and info.data.get("EMAILS_FROM_EMAIL"))
 
     EMAIL_TEST_USER: EmailStr = "test@example.com"  # type: ignore
     FIRST_SUPERUSER: EmailStr = "admin@example.com"

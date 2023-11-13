@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Union
 
-
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 from jose import jwt
 from pydantic import BaseModel, EmailStr
@@ -24,8 +23,8 @@ conf = ConnectionConfig(
 
 
 class EmailSchema(BaseModel):
-    email: List[EmailStr]
-    body: Dict[str, Any]
+    email: list[EmailStr]
+    body: dict[str, Any]
 
 
 async def send_email_async(
@@ -61,9 +60,7 @@ async def send_reset_password_email(email_to: EmailStr, username: str, token: st
             "link": link,
         },
     )
-    await send_email_async(
-        email=email, subject_template=subject, template_name=template_name
-    )
+    await send_email_async(email=email, subject_template=subject, template_name=template_name)
 
 
 async def send_new_account_email(email_to: EmailStr, username: str) -> None:

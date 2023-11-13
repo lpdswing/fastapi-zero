@@ -90,8 +90,6 @@ services:
       - SMTP_HOST=${SMTP_HOST}
       - WORKER_CLASS=app.gunicorn_conf.DisableServerUvicornWorker
       - BACKEND_CORS_ORIGINS=["https://localhost"]
-    volumes:
-      - ./backend:/app
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -110,9 +108,8 @@ services:
     <<: *backend_app
     labels: [ ]
     command:
-      - taskiq
-      - worker
-      - src.lib.taskiq.tkq:broker
+      - bash
+      - /worker-start.sh
 
   redis:
     image: redis:latest

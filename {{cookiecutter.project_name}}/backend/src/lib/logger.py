@@ -32,9 +32,7 @@ class InterceptHandler(logging.Handler):
             frame = frame.f_back
             depth += 1
 
-        logger.opt(depth=depth, exception=record.exc_info).log(
-            level, record.getMessage()
-        )
+        logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
 
 
 def init_logger():
@@ -76,9 +74,7 @@ def logger_wraps(*, entry=True, exit=True, level="DEBUG"):
         def wrapped(*args, **kwargs):
             logger_ = log.opt(depth=1)
             if entry:
-                logger_.log(
-                    level, "Entering '{}' (args={}, kwargs={})", name, args, kwargs
-                )
+                logger_.log(level, "Entering '{}' (args={}, kwargs={})", name, args, kwargs)
             result = func(*args, **kwargs)
             if exit:
                 logger_.log(level, "Exiting '{}' (result={})", name, result)

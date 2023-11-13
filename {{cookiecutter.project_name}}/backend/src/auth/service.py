@@ -1,7 +1,8 @@
 import uuid
-from typing import Optional, Callable
+from collections.abc import Callable
+from typing import Optional
 
-from fastapi import Depends, Request, BackgroundTasks
+from fastapi import BackgroundTasks, Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, IntegerIDMixin
 from fastapi_users.authentication import (
     AuthenticationBackend,
@@ -10,11 +11,11 @@ from fastapi_users.authentication import (
 )
 from fastapi_users.db import SQLAlchemyUserDatabase
 
-from src.auth.deps import get_user_db
-from src.auth.utils import send_reset_password_email, send_new_account_email
-from src.db.models import User
 from src.auth.config import auth_config
+from src.auth.deps import get_user_db
+from src.auth.utils import send_new_account_email, send_reset_password_email
 from src.config import settings
+from src.db.models import User
 from src.lib.logger import log
 
 
@@ -25,18 +26,18 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")
 
-    async def on_after_forgot_password(
-            self, user: User, token: str, request: Optional[Request] = None
-    ):
+    async def on_after_forgot_password(self, user: User, token: str, request: Optional[Request] = None):
         log.info(f"User {user.id} has forgot their password. Reset token: {token}")
         background = BackgroundTasks()
-        background.add_task(send_reset_password_email, email_to=user.email, username=user.username,
-                            token=token)
+        background.add_task(
+            send_reset_password_email,
+            email_to=user.email,
+            username=user.username,
+            token=token,
+        )
         request.state.background = background
 
-    async def on_after_request_verify(
-            self, user: User, token: str, request: Optional[Request] = None
-    ):
+    async def on_after_request_verify(self, user: User, token: str, request: Optional[Request] = None):
         log.info(f"Verification requested for user {user.id}. Verification token: {token}")
         background = BackgroundTasks()
         background.add_task(send_new_account_email, email_to=user.email, username=user.username)
